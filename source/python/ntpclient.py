@@ -1,6 +1,6 @@
 '''
 
-David Lettier (C) 2014.
+(C) 2014 David Lettier.
 
 http://www.lettier.com/
 
