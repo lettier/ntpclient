@@ -47,9 +47,9 @@ int main( int argc, char* argv[ ] )
   typedef struct
   {
 
-    unsigned li   : 2;       // Only two bits. Leap indicator.
-    unsigned vn   : 3;       // Only three bits. Version number of the protocol.
     unsigned mode : 3;       // Only three bits. Mode. Client will pick mode 3 for client.
+    unsigned vn   : 3;       // Only three bits. Version number of the protocol.
+    unsigned li   : 2;       // Only two bits. Leap indicator.
 
     uint8_t stratum;         // Eight bits. Stratum level of the local clock.
     uint8_t poll;            // Eight bits. Maximum interval between successive messages.
