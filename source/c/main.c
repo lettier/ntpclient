@@ -16,6 +16,7 @@
  *
  */
 
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +27,10 @@
 #include <netdb.h>
 
 #define NTP_TIMESTAMP_DELTA 2208988800ull
+
+#define LI(packet)   (uint8_t) ((packet.li_vn_mode & 0xC0) >> 6) // (li   & 11 000 000) >> 6
+#define VN(packet)   (uint8_t) ((packet.li_vn_mode & 0x38) >> 3) // (vn   & 00 111 000) >> 3
+#define MODE(packet) (uint8_t) ((packet.li_vn_mode & 0x07) >> 0) // (mode & 00 000 111) >> 0
 
 void error( char* msg )
 {
@@ -47,9 +52,10 @@ int main( int argc, char* argv[ ] )
   typedef struct
   {
 
-    unsigned li   : 2;       // Only two bits. Leap indicator.
-    unsigned vn   : 3;       // Only three bits. Version number of the protocol.
-    unsigned mode : 3;       // Only three bits. Mode. Client will pick mode 3 for client.
+    uint8_t li_vn_mode;      // Eight bits. li, vn, and mode.
+                             // li.   Two bits.   Leap indicator.
+                             // vn.   Three bits. Version number of the protocol.
+                             // mode. Three bits. Client will pick mode 3 for client.
 
     uint8_t stratum;         // Eight bits. Stratum level of the local clock.
     uint8_t poll;            // Eight bits. Maximum interval between successive messages.
@@ -71,11 +77,11 @@ int main( int argc, char* argv[ ] )
     uint32_t txTm_s;         // 32 bits and the most important field the client cares about. Transmit time-stamp seconds.
     uint32_t txTm_f;         // 32 bits. Transmit time-stamp fraction of a second.
 
-  } ntp_packet;                 // Total: 384 bits or 48 bytes.
+  } ntp_packet;              // Total: 384 bits or 48 bytes.
 
   // Create and zero out the packet. All 48 bytes worth.
 
-  ntp_packet packet = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+  ntp_packet packet = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
   memset( &packet, 0, sizeof( ntp_packet ) );
 
