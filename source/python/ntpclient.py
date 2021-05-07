@@ -13,7 +13,7 @@ import sys
 import socket
 import struct, time # To unpack the packet sent back and to convert the seconds to a string.
 
-host = "pool.ntp.org"; # The server.
+host = sys.argv[1]; # The server from command line.
 port = 123; # Port.
 read_buffer = 1024; # The size of the buffer to read in the received UDP packet.
 address = ( host, port ); # Tuple needed by sendto.
